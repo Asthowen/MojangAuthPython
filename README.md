@@ -62,10 +62,12 @@ mojang_auth.signout("email", "password") #signout user and return True if user s
 
 ```
 
-## Author
+## Install prerequisites
+* Execute command : ```pip3 install MojangAuthPython```
 
+## Author
 [<img width="64" src="https://avatars3.githubusercontent.com/u/59535754?s=400&u=48aecdd175dd2dd8867ae063f1973b64d298220b&v=4" alt="Asthowen">](https://github.com/Asthowen)
 
 ## License
 
-**DiscordBotPihole | Mozilla Public License 2.0**
+**MojangAuth-Python | Mozilla Public License 2.0**
