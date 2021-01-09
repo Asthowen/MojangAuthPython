@@ -9,6 +9,11 @@ class AuthException(Exception):
         super().__init__(self.message)
 
 
+class TokenNotFoundException(Exception):
+    def __init__(self):
+        super().__init__("Token not found.")
+
+
 class ServerEndpoint(enumerate):
     BASE_URL = 'https://authserver.mojang.com/'
     AUTHENTICATE = 'authenticate'
@@ -27,6 +32,9 @@ class MojangAuth(object):
         self._username = ''
         self._id = ''
 
+    def send_request(self, server_endpoint: str, json: dict):
+        return post(ServerEndpoint.BASE_URL + server_endpoint, json=json)
+
     def auth(self, email: str, password: str):
         json = {
             "agent": {
@@ -36,7 +44,9 @@ class MojangAuth(object):
             "username": email,
             "password": password,
         }
-        request_response = post(ServerEndpoint.BASE_URL + ServerEndpoint.AUTHENTICATE, json=json)
+
+        request_response = self.send_request(ServerEndpoint.AUTHENTICATE, json)
+
         if request_response.status_code == 200:
             request_return = j.loads(request_response.text)
             self._access_token = request_return['accessToken']
@@ -53,7 +63,9 @@ class MojangAuth(object):
             "accessToken": access_token,
             "clientToken": client_token
         }
-        request_response = post(ServerEndpoint.BASE_URL + ServerEndpoint.REFRESH, json=json)
+
+        request_response = self.send_request(ServerEndpoint.REFRESH, json)
+
         if request_response.status_code == 200:
             request_return = j.loads(request_response.text)
             self._access_token = request_return['accessToken']
@@ -70,29 +82,34 @@ class MojangAuth(object):
             "accessToken": access_token,
             "clientToken": client_token
         }
-        request_response = post(ServerEndpoint.BASE_URL + ServerEndpoint.VALIDATE, json=json)
+
+        request_response = self.send_request(ServerEndpoint.VALIDATE, json)
+
         if request_response.status_code == 204:
             return True
         else:
-            return False
+            raise TokenNotFoundException()
 
     def invalidate(self, access_token: str, client_token: str):
         json = {
             "accessToken": access_token,
             "clientToken": client_token
         }
-        request_response = post(ServerEndpoint.BASE_URL + ServerEndpoint.INVALIDATE, json=json)
+
+        request_response = self.send_request(ServerEndpoint.INVALIDATE, json)
+
         if request_response.status_code == 204:
             return True
         else:
-            return False
+            raise TokenNotFoundException()
 
     def signout(self, username: str, password: str):
         json = {
             "username": username,
             "password": password
         }
-        request_response = post(ServerEndpoint.BASE_URL + ServerEndpoint.SIGNOUT, json=json)
+
+        request_response = self.send_request(ServerEndpoint.SIGNOUT, json)
 
         if request_response.status_code == 204:
             return True
