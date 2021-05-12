@@ -1,17 +1,12 @@
 from requests import post
-import json as j
+import json
 
 
 class AuthException(Exception):
-    def __init__(self, json: str):
-        self.json_error = j.loads(json)
+    def __init__(self, request: str):
+        self.json_error = json.loads(request)
         self.message = self.json_error['error'] + ': ' + self.json_error['errorMessage']
         super().__init__(self.message)
-
-
-class TokenNotFoundException(Exception):
-    def __init__(self):
-        super().__init__("Token not found.")
 
 
 class ServerEndpoint(enumerate):
@@ -26,17 +21,18 @@ class ServerEndpoint(enumerate):
 class MojangAuth(object):
 
     def __init__(self):
-        self._access_token = ''
-        self._client_token = ''
-        self._profile = []
-        self._username = ''
-        self._id = ''
+        self.__access_token = ''
+        self.__client_token = ''
+        self.__profile = []
+        self.__username = ''
+        self.__id = ''
 
-    def send_request(self, server_endpoint: str, json: dict):
-        return post(ServerEndpoint.BASE_URL + server_endpoint, json=json)
+    @staticmethod
+    def send_request(server_endpoint: str, request: dict):
+        return post(ServerEndpoint.BASE_URL + server_endpoint, json=request)
 
     def auth(self, email: str, password: str):
-        json = {
+        request = {
             "agent": {
                 "name": "Minecraft",
                 "version": 1
@@ -45,93 +41,85 @@ class MojangAuth(object):
             "password": password,
         }
 
-        request_response = self.send_request(ServerEndpoint.AUTHENTICATE, json)
+        request_response = self.send_request(ServerEndpoint.AUTHENTICATE, request)
 
         if request_response.status_code == 200:
-            request_return = j.loads(request_response.text)
-            self._access_token = request_return['accessToken']
-            self._client_token = request_return['clientToken']
-            self._profile.append(request_return['selectedProfile']['name'])
-            self._profile.append(request_return['selectedProfile']['id'])
-            self._username = request_return['selectedProfile']['name']
-            self._id = request_return['selectedProfile']['id']
+            request_return = json.loads(request_response.text)
+
+            self.__access_token = request_return['accessToken']
+            self.__client_token = request_return['clientToken']
+            self.__profile.append(request_return['selectedProfile']['name'])
+            self.__profile.append(request_return['selectedProfile']['id'])
+            self.__username = request_return['selectedProfile']['name']
+            self.__id = request_return['selectedProfile']['id']
         else:
             raise AuthException(request_response.text)
 
     def refresh(self, access_token: str, client_token: str):
-        json = {
+        request = {
             "accessToken": access_token,
             "clientToken": client_token
         }
 
-        request_response = self.send_request(ServerEndpoint.REFRESH, json)
+        request_response = self.send_request(ServerEndpoint.REFRESH, request)
 
         if request_response.status_code == 200:
-            request_return = j.loads(request_response.text)
-            self._access_token = request_return['accessToken']
-            self._client_token = request_return['clientToken']
-            self._profile.append(request_return['selectedProfile']['name'])
-            self._profile.append(request_return['selectedProfile']['id'])
-            self._username = request_return['selectedProfile']['name']
-            self._id = request_return['selectedProfile']['id']
+            request_return = json.loads(request_response.text)
+            self.__access_token = request_return['accessToken']
+            self.__client_token = request_return['clientToken']
+            self.__profile.append(request_return['selectedProfile']['name'])
+            self.__profile.append(request_return['selectedProfile']['id'])
+            self.__username = request_return['selectedProfile']['name']
+            self.__id = request_return['selectedProfile']['id']
         else:
             raise AuthException(request_response.text)
 
-    def validate(self, access_token: str, client_token: str):
-        json = {
+    def validate(self, access_token: str, client_token: str) -> bool:
+        request = {
             "accessToken": access_token,
             "clientToken": client_token
         }
 
-        request_response = self.send_request(ServerEndpoint.VALIDATE, json)
+        request_response = self.send_request(ServerEndpoint.VALIDATE, request)
 
-        if request_response.status_code == 204:
-            return True
-        else:
-            raise TokenNotFoundException()
+        return True if request_response.status_code == 204 else False
 
-    def invalidate(self, access_token: str, client_token: str):
-        json = {
+    def invalidate(self, access_token: str, client_token: str) -> bool:
+        request = {
             "accessToken": access_token,
             "clientToken": client_token
         }
 
-        request_response = self.send_request(ServerEndpoint.INVALIDATE, json)
+        request_response = self.send_request(ServerEndpoint.INVALIDATE, request)
 
-        if request_response.status_code == 204:
-            return True
-        else:
-            raise TokenNotFoundException()
+        return True if request_response.status_code == 204 else False
 
-    def signout(self, username: str, password: str):
-        json = {
+    def sign_out(self, username: str, password: str) -> bool:
+        request = {
             "username": username,
             "password": password
         }
 
-        request_response = self.send_request(ServerEndpoint.SIGNOUT, json)
+        request_response = self.send_request(ServerEndpoint.SIGNOUT, request)
 
-        if request_response.status_code == 204:
-            return True
-        else:
-            return False
+        return True if request_response.status_code == 204 else False
 
     @property
-    def access_token(self):
-        return self._access_token
+    def access_token(self) -> str:
+        return self.__access_token
 
     @property
-    def client_token(self):
-        return self._client_token
+    def client_token(self) -> str:
+        return self.__client_token
 
     @property
-    def profile(self):
-        return self._profile
+    def profile(self) -> list:
+        return self.__profile
 
     @property
-    def username(self):
-        return self._username
+    def username(self) -> str:
+        return self.__username
 
     @property
-    def id(self):
-        return self._id
+    def id(self) -> str:
+        return self.__id

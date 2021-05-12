@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8", errors="ignore") as fh:
 
 setuptools.setup(
     name="MojangAuthPython",
-    version="0.1.2",
+    version="0.1.3",
     author="Asthowen",
     description="MojangAuthPython is a lib for mojang authentification.",
     long_description=long_description,

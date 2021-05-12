@@ -1,14 +1,15 @@
 # MojangAuth-Python
-
 A lib for mojang authentification.
 
 ## Made with
-
 * [**requests**](https://pypi.org/project/requests/)
+
+## Install prerequisites
+* Execute command: ```pip3 install MojangAuthPython```
 
 ## Examples
 
-**Simple Authentification :**
+### Simple Authentification
 ```python
 from MojangAuth import MojangAuth
 
@@ -16,58 +17,52 @@ mojang_auth = MojangAuth()
 
 mojang_auth.auth("email", "password")
 
-access_token = mojang_auth.access_token #str : return access token
-client_token = mojang_auth.client_token #str : return client token
-profile = mojang_auth.profile #list : return selected profile
-username = mojang_auth.username #str : return username
-id = mojang_auth.id #str : return id
+access_token = mojang_auth.access_token # return access token (str)
+client_token = mojang_auth.client_token # return client token (str)
+profile = mojang_auth.profile # return selected profile (list)
+username = mojang_auth.username # return username (str)
+id = mojang_auth.id #str : return id (str)
 ```
 
-**Refresh Token :**
+### Refresh Token
 ```python
 from MojangAuth import MojangAuth
 
 mojang_auth = MojangAuth()
 
-mojang_auth.refresh("access token", "client token")
+mojang_auth.refresh("accessToken", "clientToken")
 ```
 
-**Validate Token :**
+### Validate Token
 ```python
 from MojangAuth import MojangAuth
 
 mojang_auth = MojangAuth()
 
-mojang_auth.validate("access token", "client token") #return True if token is good and False if not
-
+mojang_auth.validate("accessToken", "clientToken") # return True if token is good and False if not
 ```
 
-**Invalidate Token :**
+### Invalidate Token
 ```python
 from MojangAuth import MojangAuth
 
 mojang_auth = MojangAuth()
 
-mojang_auth.invalidate("access token", "client token") #invalide token and return True if token is good and False if not
-
+mojang_auth.invalidate("accessToken", "clientToken") # invalidated token and return True if token is good and False if not
 ```
 
-**Signout :**
+### Sign-out
+
 ```python
 from MojangAuth import MojangAuth
 
 mojang_auth = MojangAuth()
 
-mojang_auth.signout("email", "password") #signout user and return True if user successfully signout and False if not
-
+mojang_auth.sign_out("email", "password")  # sign-out user and return True if user successfully sign-out and False if not
 ```
-
-## Install prerequisites
-* Execute command : ```pip3 install MojangAuthPython```
 
 ## Author
 [<img width="64" src="https://avatars3.githubusercontent.com/u/59535754?s=400&u=48aecdd175dd2dd8867ae063f1973b64d298220b&v=4" alt="Asthowen">](https://github.com/Asthowen)
 
 ## License
-
-**MojangAuth-Python | Mozilla Public License 2.0**
+**[MojangAuth-Python](https://github.com/Asthowen/MojangAuth-Python) | [Mozilla Public License 2.0](https://github.com/Asthowen/MojangAuth-Python/blob/main/LICENSE)**
