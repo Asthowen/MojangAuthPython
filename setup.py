@@ -5,12 +5,12 @@ with open("README.md", "r", encoding="utf-8", errors="ignore") as fh:
 
 setuptools.setup(
     name="MojangAuthPython",
-    version="0.1.3",
+    version="0.1.4",
     author="Asthowen",
     description="MojangAuthPython is a lib for mojang authentification.",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/Asthowen/MojangAuth-Python",
+    url="https://github.com/Asthowen/MojangAuthPython",
     packages=setuptools.find_packages(),
     python_requires='>= 3.6',
     include_package_data=True,

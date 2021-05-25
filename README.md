@@ -65,4 +65,4 @@ mojang_auth.sign_out("email", "password")  # sign-out user and return True if us
 [<img width="64" src="https://avatars3.githubusercontent.com/u/59535754?s=400&u=48aecdd175dd2dd8867ae063f1973b64d298220b&v=4" alt="Asthowen">](https://github.com/Asthowen)
 
 ## License
-**[MojangAuth-Python](https://github.com/Asthowen/MojangAuth-Python) | [Mozilla Public License 2.0](https://github.com/Asthowen/MojangAuth-Python/blob/main/LICENSE)**
+**[MojangAuth-Python](https://github.com/Asthowen/MojangAuthPython) | [Mozilla Public License 2.0](https://github.com/Asthowen/MojangAuthPython/blob/main/LICENSE)**
